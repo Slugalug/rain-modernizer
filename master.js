@@ -1,8 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const observer = new MutationObserver(() => {
+  function injectHeader() {
     const pageContainer = document.querySelector('#Container');
     if (pageContainer && !document.querySelector('#CustomHeader')) {
-
       const headerHTML = `
         <header id="CustomHeader">
           <div class="wrapper">
@@ -17,10 +16,15 @@ document.addEventListener("DOMContentLoaded", function () {
           </div>
         </header>
       `;
-
       pageContainer.insertAdjacentHTML('afterbegin', headerHTML);
     }
-  });
+  }
 
-  observer.observe(document.body, { childList: true, subtree: true });
+  // Try every 100ms until container exists
+  const interval = setInterval(() => {
+    if (document.querySelector('#Container')) {
+      injectHeader();
+      clearInterval(interval);
+    }
+  }, 100);
 });
